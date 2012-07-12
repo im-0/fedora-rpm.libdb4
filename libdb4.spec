@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source0: http://download.oracle.com/berkeley-db/db-%{version}.tar.gz
 Source1: http://download.oracle.com/berkeley-db/db.1.85.tar.gz
 # db-1.85 upstream patches
@@ -89,6 +89,7 @@ This package contains the C++ version of the Berkeley DB library (v4).
 Summary: C++ development files for the Berkeley DB database library (version 4)
 Group: Development/Libraries
 Requires: %{name}-cxx%{?_isa} = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Obsoletes: db4-cxx-devel < 5.0.0
 
 %description cxx-devel
@@ -264,6 +265,16 @@ for i in `ls | sed s/db_//`; do
 done
 popd
 
+# put unversioned libraries to separate directory to not to conflict
+# with libdb-devel (#839508)
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/%{name}
+pushd ${RPM_BUILD_ROOT}%{_libdir}/%{name}
+for i in libdb libdb_cxx libdb_tcl libdb_java; do
+  rm -f ${RPM_BUILD_ROOT}%{_libdir}/$i.so
+  ln -s ../$i-%{__soversion}.so $i.so
+done
+popd
+
 # remove RPATHs
 chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 
@@ -294,7 +305,7 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files devel
 %defattr(-,root,root,-)
-%{_libdir}/libdb.so
+%{_libdir}/%{name}/libdb.so
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/db.h
 %{_includedir}/%{name}/db_185.h
@@ -334,7 +345,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %files cxx-devel
 %defattr(-,root,root,-)
 %{_includedir}/%{name}/db_cxx.h
-%{_libdir}/libdb_cxx.so
+%{_libdir}/%{name}/libdb_cxx.so
 
 %files tcl
 %defattr(-,root,root,-)
@@ -343,7 +354,7 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files tcl-devel
 %defattr(-,root,root,-)
-%{_libdir}/libdb_tcl.so
+%{_libdir}/%{name}/libdb_tcl.so
 
 %files java
 %defattr(-,root,root,-)
@@ -353,8 +364,12 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files java-devel
 %defattr(-,root,root,-)
-%{_libdir}/libdb_java.so
+%{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Thu Jul 12 2012 Jindrich Novy <jnovy@redhat.com> 4.8.30-2
+- fix dependencies in cxx-devel and fix file conflict with
+  libdb-devel (#839508)
+
 * Sun Apr 22 2012 Jindrich Novy <jnovy@redhat.com> 4.8.30-1
 - introduction of libdb4
