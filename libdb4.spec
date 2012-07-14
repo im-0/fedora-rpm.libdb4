@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source0: http://download.oracle.com/berkeley-db/db-%{version}.tar.gz
 Source1: http://download.oracle.com/berkeley-db/db.1.85.tar.gz
 # db-1.85 upstream patches
@@ -190,8 +190,8 @@ make -C db.1.85/PORT/%{_os} OORG="$CFLAGS"
 
 test -d dist/dist-tls || mkdir dist/dist-tls
 # Static link db_dump185 with old db-185 libraries.
-/bin/sh libtool --mode=compile	%{__cc} $RPM_OPT_FLAGS -Idb.1.85/PORT/%{_os}/include -D_REENTRANT -c db_dump185/db_dump185.c -o dist/dist-tls/db_dump185.lo
-/bin/sh libtool --mode=link	%{__cc} -o dist/dist-tls/db_dump185 dist/dist-tls/db_dump185.lo db.1.85/PORT/%{_os}/libdb.a
+/bin/sh libtool --tag=CC --mode=compile %{__cc} $RPM_OPT_FLAGS -Idb.1.85/PORT/%{_os}/include -D_REENTRANT -c db_dump185/db_dump185.c -o dist/dist-tls/db_dump185.lo
+/bin/sh libtool --tag=LD --mode=link %{__cc} -o dist/dist-tls/db_dump185 dist/dist-tls/db_dump185.lo db.1.85/PORT/%{_os}/libdb.a
 
 pushd dist/dist-tls
 ln -sf ../configure .
@@ -367,6 +367,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Sat Jul 14 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 4.8.30-3
+- Specify tag for libtool
+
 * Thu Jul 12 2012 Jindrich Novy <jnovy@redhat.com> 4.8.30-2
 - fix dependencies in cxx-devel and fix file conflict with
   libdb-devel (#839508)
