@@ -4,7 +4,11 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 3%{?dist}
+Release: 4%{?dist}
+URL: http://www.oracle.com/database/berkeley-db/
+License: Sleepycat and BSD
+Group: System Environment/Libraries
+
 Source0: http://download.oracle.com/berkeley-db/db-%{version}.tar.gz
 Source1: http://download.oracle.com/berkeley-db/db.1.85.tar.gz
 # db-1.85 upstream patches
@@ -16,11 +20,10 @@ Patch13: http://www.oracle.com/technology/products/berkeley-db/db/update/1.85/pa
 Patch20: db-1.85-errno.patch
 Patch21: db-4.6.21-1.85-compat.patch
 Patch22: db-4.5.20-jni-include-dir.patch
-URL: http://www.oracle.com/database/berkeley-db/
-License: Sleepycat and BSD
-Group: System Environment/Libraries
+
 Conflicts: filesystem < 3
 Obsoletes: db4 < 5.0.0
+Provides: db4 = %{version}
 BuildRequires: perl libtool ed util-linux-ng
 BuildRequires: tcl-devel%{?_isa} >= 8.5.2-3
 BuildRequires: chrpath
@@ -42,6 +45,7 @@ Summary: Command line tools for managing Berkeley DB (version 4) databases
 Group: Applications/Databases
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: db4-utils < 5.0.0
+Provides: db4-utils = %{version}
 
 %description utils
 This package contains command-line tools for managing Berkeley DB (version
@@ -52,6 +56,7 @@ Summary: C development files for the Berkeley DB (version 4) library
 Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: db4-devel < 5.0.0
+Provides: db4-devel = %{version}
 
 %description devel
 This package contains the header files and libraries for building C
@@ -62,6 +67,7 @@ Summary: Documentation for the Berkeley DB
 Group: Documentation
 BuildArch: noarch
 Obsoletes: db4-devel-doc < 5.0.0
+Provides: db4-devel-doc = %{version}
 
 %description doc
 This package includes documentation files for the Berkeley DB database.
@@ -71,6 +77,7 @@ Summary: Berkeley DB (version 4) static libraries
 Group: Development/Libraries
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Obsoletes: db4-devel-static < 5.0.0
+Provides: db4-devel-static = %{version}
 
 %description devel-static
 This package contains static libraries needed for applications that
@@ -81,6 +88,7 @@ Summary: The Berkeley DB database library (version 4) for C++
 Group: System Environment/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: db4-cxx < 5.0.0
+Provides: db4-cxx = %{version}
 
 %description cxx
 This package contains the C++ version of the Berkeley DB library (v4).
@@ -91,6 +99,7 @@ Group: Development/Libraries
 Requires: %{name}-cxx%{?_isa} = %{version}-%{release}
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Obsoletes: db4-cxx-devel < 5.0.0
+Provides: db4-cxx-devel = %{version}
 
 %description cxx-devel
 This package contains the header files and libraries for building C++
@@ -101,6 +110,7 @@ Summary: Development files for using the Berkeley DB (version 4) with tcl
 Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: db4-tcl < 5.0.0
+Provides: db4-tcl = %{version}
 
 %description tcl
 This package contains the libraries for building programs which use the
@@ -110,6 +120,8 @@ Berkeley DB in Tcl.
 Summary: Development files for using the Berkeley DB (version 4) with tcl
 Group: Development/Libraries
 Requires: %{name}-tcl%{?_isa} = %{version}-%{release}
+Obsoletes: db4-tcl-devel < 5.0.0
+Provides: db4-tcl-devel = %{version}
 
 %description tcl-devel
 This package contains the libraries for building programs which use the
@@ -120,6 +132,7 @@ Summary: Development files for using the Berkeley DB (version 4) with Java
 Group: System Environment/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: db4-java < 5.0.0
+Provides: db4-java = %{version}
 
 %description java
 This package contains the libraries for building programs which use the
@@ -129,6 +142,8 @@ Berkeley DB in Java.
 Summary: Development files for using the Berkeley DB (version 4) with Java
 Group: Development/Libraries
 Requires: %{name}-java%{?_isa} = %{version}-%{release}
+Obsoletes: db4-java-devel < 5.0.0
+Provides: db4-java-devel = %{version}
 
 %description java-devel
 This package contains the libraries for building programs which use the
@@ -224,7 +239,6 @@ fi
 popd
 
 %install
-rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_includedir}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}
 
@@ -277,9 +291,6 @@ popd
 
 # remove RPATHs
 chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
-
-%clean
-rm -rf ${RPM_BUILD_ROOT}
 
 %post -p /sbin/ldconfig
 
@@ -367,6 +378,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Mon Jul 16 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 4.8.30-4
+- Add db4 provides to allow transisition for name change
+- Spec cleanup
+
 * Sat Jul 14 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 4.8.30-3
 - Specify tag for libtool
 
