@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 6%{?dist}
+Release: 7%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 Group: System Environment/Libraries
@@ -24,7 +24,7 @@ Patch22: db-4.5.20-jni-include-dir.patch
 Conflicts: filesystem < 3
 Obsoletes: db4 < 5.0.0
 Provides: db4 = %{version}
-BuildRequires: perl libtool ed util-linux-ng
+BuildRequires: perl perl-Carp libtool ed util-linux-ng
 BuildRequires: tcl-devel%{?_isa} >= 8.5.2-3
 BuildRequires: chrpath
 BuildRequires: gcc-java
@@ -255,8 +255,12 @@ mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/%{name}
 mv ${RPM_BUILD_ROOT}%{_includedir}/*.h ${RPM_BUILD_ROOT}%{_includedir}/%{name}
 
 # Move java jar file to the correct place
+# Rename java jar file to fix conflict with libdb (#800359)
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/java
 mv ${RPM_BUILD_ROOT}%{_libdir}/*.jar ${RPM_BUILD_ROOT}%{_datadir}/java
+pushd ${RPM_BUILD_ROOT}%{_datadir}/java
+mv db.jar db4.jar
+popd
 
 # Eliminate installed doco
 rm -rf ${RPM_BUILD_ROOT}%{_prefix}/docs
@@ -378,6 +382,10 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Tue Mar 26 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-7
+- Fix file conflict with libdb-java (#800359)
+- Add missing perl-Carp to BuildRequires
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.8.30-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
