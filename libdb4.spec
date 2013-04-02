@@ -27,7 +27,6 @@ Provides: db4 = %{version}
 BuildRequires: perl perl-Carp libtool ed util-linux-ng
 BuildRequires: tcl-devel%{?_isa} >= 8.5.2-3
 BuildRequires: chrpath
-BuildRequires: gcc-java
 BuildRequires: java-devel >= 1:1.6.0
 
 %description
@@ -382,6 +381,9 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Tue Apr 02 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-8
+- Removed dependency on gcc-java
+
 * Tue Mar 26 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-7
 - Fix file conflict with libdb-java (#800359)
 - Add missing perl-Carp to BuildRequires
