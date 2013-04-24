@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 8%{?dist}
+Release: 9%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 Group: System Environment/Libraries
@@ -20,6 +20,7 @@ Patch13: http://www.oracle.com/technology/products/berkeley-db/db/update/1.85/pa
 Patch20: db-1.85-errno.patch
 Patch21: db-4.6.21-1.85-compat.patch
 Patch22: db-4.5.20-jni-include-dir.patch
+Patch23: db-4.8.30-quotas-segfault.patch
 
 Conflicts: filesystem < 3
 Obsoletes: db4 < 5.0.0
@@ -163,6 +164,7 @@ popd
 
 %patch21 -p1 -b .185compat
 %patch22 -p1 -b .4.5.20.jni
+%patch23 -p1 -b .quotas-segfault
 
 # Fix HREF references in the docs which would otherwise break when we split the docs up into subpackages.
 set +x
@@ -381,6 +383,9 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Wed Apr 24 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-9
+- Added sanity patch fixing crashes when no more disc space left (#740631)
+
 * Tue Apr 02 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-8
 - Removed dependency on gcc-java
 
