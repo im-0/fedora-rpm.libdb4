@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 9%{?dist}
+Release: 10%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 Group: System Environment/Libraries
@@ -243,7 +243,8 @@ popd
 mkdir -p ${RPM_BUILD_ROOT}%{_includedir}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}
 
-%makeinstall -C dist/dist-tls
+# Disable built-in binaries stripping (#729002)
+%makeinstall STRIP=/bin/true -C dist/dist-tls
 
 # XXX Nuke non-versioned archives and symlinks
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/{libdb.a,libdb_cxx.a}
@@ -383,6 +384,9 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Wed May 16 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-10
+- Fixed missing debuginfos for utils subpackage (#729002)
+
 * Wed Apr 24 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-9
 - Added sanity patch fixing crashes when no more disc space left (#740631)
 
