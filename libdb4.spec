@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 11%{?dist}
+Release: 12%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 Group: System Environment/Libraries
@@ -209,6 +209,10 @@ test -d dist/dist-tls || mkdir dist/dist-tls
 /bin/sh libtool --tag=CC --mode=compile %{__cc} $RPM_OPT_FLAGS -Idb.1.85/PORT/%{_os}/include -D_REENTRANT -c db_dump185/db_dump185.c -o dist/dist-tls/db_dump185.lo
 /bin/sh libtool --tag=LD --mode=link %{__cc} -o dist/dist-tls/db_dump185 dist/dist-tls/db_dump185.lo db.1.85/PORT/%{_os}/libdb.a
 
+# Update gnu-config files for AArch64
+chmod 644 dist/config.{guess,sub}
+cp /usr/lib/rpm/redhat/config.{guess,sub} dist/
+
 pushd dist/dist-tls
 ln -sf ../configure .
 %configure -C \
@@ -384,6 +388,9 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Fri Nov 08 2013 Honza Horak <hhorak@redhat.com> - 4.8.30-12
+- Updated the config files for aarch64 architecture (#1028112)
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.8.30-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
