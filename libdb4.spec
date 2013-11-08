@@ -394,7 +394,7 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.8.30-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Wed May 16 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-10
+* Thu May 16 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-10
 - Fixed missing debuginfos for utils subpackage (#729002)
 
 * Wed Apr 24 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-9
