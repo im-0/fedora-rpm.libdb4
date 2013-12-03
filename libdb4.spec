@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 12%{?dist}
+Release: 13%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 Group: System Environment/Libraries
@@ -21,6 +21,7 @@ Patch20: db-1.85-errno.patch
 Patch21: db-4.6.21-1.85-compat.patch
 Patch22: db-4.5.20-jni-include-dir.patch
 Patch23: db-4.8.30-quotas-segfault.patch
+Patch24: db-4.8.30-format-security.patch
 
 Conflicts: filesystem < 3
 Obsoletes: db4 < 5.0.0
@@ -165,6 +166,7 @@ popd
 %patch21 -p1 -b .185compat
 %patch22 -p1 -b .4.5.20.jni
 %patch23 -p1 -b .quotas-segfault
+%patch24 -p1 -b .format-security
 
 # Fix HREF references in the docs which would otherwise break when we split the docs up into subpackages.
 set +x
@@ -388,6 +390,9 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Tue Dec 03 2013 Jan Stanek <jstanek@redhat.com> - 4.8.30-13
+- Adjusted for -Werror=format-security gcc flag.
+
 * Fri Nov 08 2013 Honza Horak <hhorak@redhat.com> - 4.8.30-12
 - Updated the config files for aarch64 architecture (#1028112)
 
