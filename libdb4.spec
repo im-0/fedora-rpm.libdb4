@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 14%{?dist}
+Release: 15%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 Group: System Environment/Libraries
@@ -27,7 +27,7 @@ Conflicts: filesystem < 3
 Obsoletes: db4 < 5.0.0
 Provides: db4 = %{version}
 BuildRequires: perl perl-Carp libtool ed util-linux-ng
-BuildRequires: tcl-devel%{?_isa} >= 8.5.2-3
+BuildRequires: tcl-devel%{?_isa} >= 8.6.1
 BuildRequires: chrpath
 BuildRequires: java-devel >= 1:1.6.0
 
@@ -225,7 +225,7 @@ ln -sf ../configure .
 	--enable-java \
 	--enable-test \
 	--disable-rpath \
-	--with-tcl=%{_libdir}/tcl8.5
+	--with-tcl=%{_libdir}/tcl8.6
 
 # Remove libtool predep_objects and postdep_objects wonkiness so that
 # building without -nostdlib doesn't include them twice.  Because we
@@ -390,6 +390,9 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Tue Jun 10 2014 Jan Stanek <jstanek@redhat.com> - 4.8.30-15
+- Fixed search path for new tcl
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.8.30-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
