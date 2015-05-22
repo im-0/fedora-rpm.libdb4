@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 17%{?dist}
+Release: 18%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 Group: System Environment/Libraries
@@ -22,6 +22,7 @@ Patch21: db-4.6.21-1.85-compat.patch
 Patch22: db-4.5.20-jni-include-dir.patch
 Patch23: db-4.8.30-quotas-segfault.patch
 Patch24: db-4.8.30-format-security.patch
+Patch25: db-4.7.25-memp_stat-upstream-fix.patch
 
 Conflicts: filesystem < 3
 Obsoletes: db4 < 5.0.0
@@ -167,6 +168,7 @@ popd
 %patch22 -p1 -b .4.5.20.jni
 %patch23 -p1 -b .quotas-segfault
 %patch24 -p1 -b .format-security
+%patch25 -p1 -b .memp_stat
 
 # Fix HREF references in the docs which would otherwise break when we split the docs up into subpackages.
 set +x
@@ -390,6 +392,10 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Fri May 22 2015 Jan Stanek <jstanek@redhat.com> - 4.8.30-18
+- Add upstream fix for memp_stat heap corruption.
+- Resolves: rhbz#1211871
+
 * Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 4.8.30-17
 - Rebuilt for GCC 5 C++11 ABI change
 
