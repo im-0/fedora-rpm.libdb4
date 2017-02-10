@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 20%{?dist}
+Release: 21%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 Group: System Environment/Libraries
@@ -392,6 +392,9 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 4.8.30-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 4.8.30-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
