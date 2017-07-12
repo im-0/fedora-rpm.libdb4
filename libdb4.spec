@@ -27,7 +27,7 @@ Patch25: db-4.7.25-memp_stat-upstream-fix.patch
 Conflicts: filesystem < 3
 Obsoletes: db4 < 5.0.0
 Provides: db4 = %{version}
-BuildRequires: perl perl-Carp libtool ed util-linux-ng
+BuildRequires: perl-interpreter perl-Carp libtool ed util-linux-ng
 BuildRequires: tcl-devel%{?_isa} >= 8.6.1
 BuildRequires: chrpath
 BuildRequires: java-devel >= 1:1.6.0
