@@ -1,13 +1,12 @@
-%define __soversion_major 4
-%define __soversion %{__soversion_major}.8
+%global __soversion_major 4
+%global __soversion %{__soversion_major}.8
 
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 24%{?dist}
+Release: 25%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
-Group: System Environment/Libraries
 
 Source0: http://download.oracle.com/berkeley-db/db-%{version}.tar.gz
 Source1: http://download.oracle.com/berkeley-db/db.1.85.tar.gz
@@ -24,13 +23,18 @@ Patch23: db-4.8.30-quotas-segfault.patch
 Patch24: db-4.8.30-format-security.patch
 Patch25: db-4.7.25-memp_stat-upstream-fix.patch
 
+BuildRequires: chrpath
+BuildRequires: ed
+BuildRequires: java-devel >= 1:1.6.0
+BuildRequires: libtool
+BuildRequires: perl-interpreter
+BuildRequires: perl-Carp
+BuildRequires: tcl-devel >= 8.6.1
+BuildRequires: util-linux-ng
+
 Conflicts: filesystem < 3
 Obsoletes: db4 < 5.0.0
 Provides: db4 = %{version}
-BuildRequires: perl-interpreter perl-Carp libtool ed util-linux-ng
-BuildRequires: tcl-devel%{?_isa} >= 8.6.1
-BuildRequires: chrpath
-BuildRequires: java-devel >= 1:1.6.0
 
 %description
 The Berkeley Database (Berkeley DB) is a programmatic toolkit that
@@ -44,7 +48,6 @@ be installed on all systems.
 
 %package utils
 Summary: Command line tools for managing Berkeley DB (version 4) databases
-Group: Applications/Databases
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: db4-utils < 5.0.0
 Provides: db4-utils = %{version}
@@ -55,7 +58,6 @@ This package contains command-line tools for managing Berkeley DB (version
 
 %package devel
 Summary: C development files for the Berkeley DB (version 4) library
-Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: db4-devel < 5.0.0
 Provides: db4-devel = %{version}
@@ -66,7 +68,6 @@ programs which use the Berkeley DB.
 
 %package doc
 Summary: Documentation for the Berkeley DB
-Group: Documentation
 BuildArch: noarch
 Obsoletes: db4-devel-doc < 5.0.0
 Provides: db4-devel-doc = %{version}
@@ -76,7 +77,6 @@ This package includes documentation files for the Berkeley DB database.
 
 %package devel-static
 Summary: Berkeley DB (version 4) static libraries
-Group: Development/Libraries
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Obsoletes: db4-devel-static < 5.0.0
 Provides: db4-devel-static = %{version}
@@ -87,7 +87,6 @@ require static linking of Berkeley DB.
 
 %package cxx
 Summary: The Berkeley DB database library (version 4) for C++
-Group: System Environment/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: db4-cxx < 5.0.0
 Provides: db4-cxx = %{version}
@@ -97,7 +96,6 @@ This package contains the C++ version of the Berkeley DB library (v4).
 
 %package cxx-devel
 Summary: C++ development files for the Berkeley DB database library (version 4)
-Group: Development/Libraries
 Requires: %{name}-cxx%{?_isa} = %{version}-%{release}
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Obsoletes: db4-cxx-devel < 5.0.0
@@ -109,7 +107,6 @@ programs which use the Berkeley DB.
 
 %package tcl
 Summary: Development files for using the Berkeley DB (version 4) with tcl
-Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: db4-tcl < 5.0.0
 Provides: db4-tcl = %{version}
@@ -120,7 +117,6 @@ Berkeley DB in Tcl.
 
 %package tcl-devel
 Summary: Development files for using the Berkeley DB (version 4) with tcl
-Group: Development/Libraries
 Requires: %{name}-tcl%{?_isa} = %{version}-%{release}
 Obsoletes: db4-tcl-devel < 5.0.0
 Provides: db4-tcl-devel = %{version}
@@ -131,7 +127,6 @@ Berkeley DB in Tcl.
 
 %package java
 Summary: Development files for using the Berkeley DB (version 4) with Java
-Group: System Environment/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: db4-java < 5.0.0
 Provides: db4-java = %{version}
@@ -142,7 +137,6 @@ Berkeley DB in Java.
 
 %package java-devel
 Summary: Development files for using the Berkeley DB (version 4) with Java
-Group: Development/Libraries
 Requires: %{name}-java%{?_isa} = %{version}-%{release}
 Obsoletes: db4-java-devel < 5.0.0
 Provides: db4-java-devel = %{version}
@@ -323,32 +317,28 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %postun -p /sbin/ldconfig java
 
 %files
-%defattr(-,root,root,-)
-%doc LICENSE README
+%license LICENSE
+%doc README
 %{_libdir}/libdb-%{__soversion}.so
 %{_libdir}/libdb-%{__soversion_major}.so
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/%{name}/libdb.so
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/db.h
 %{_includedir}/%{name}/db_185.h
 
 %files doc
-%defattr(-,root,root,-)
 %doc docs/*
 %doc examples_c examples_cxx examples_java
 
 %files devel-static
-%defattr(-,root,root,-)
 %{_libdir}/libdb-%{__soversion}.a
 %{_libdir}/libdb_cxx-%{__soversion}.a
 %{_libdir}/libdb_tcl-%{__soversion}.a
 %{_libdir}/libdb_java-%{__soversion}.a
 
 %files utils
-%defattr(-,root,root,-)
 %{_bindir}/db*_archive
 %{_bindir}/db*_checkpoint
 %{_bindir}/db*_deadlock
@@ -363,35 +353,32 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_bindir}/db*_verify
 
 %files cxx
-%defattr(-,root,root,-)
 %{_libdir}/libdb_cxx-%{__soversion}.so
 %{_libdir}/libdb_cxx-%{__soversion_major}.so
 
 %files cxx-devel
-%defattr(-,root,root,-)
 %{_includedir}/%{name}/db_cxx.h
 %{_libdir}/%{name}/libdb_cxx.so
 
 %files tcl
-%defattr(-,root,root,-)
 %{_libdir}/libdb_tcl-%{__soversion}.so
 %{_libdir}/libdb_tcl-%{__soversion_major}.so
 
 %files tcl-devel
-%defattr(-,root,root,-)
 %{_libdir}/%{name}/libdb_tcl.so
 
 %files java
-%defattr(-,root,root,-)
 %{_libdir}/libdb_java-%{__soversion}*.so
 %{_libdir}/libdb_java-%{__soversion_major}*.so
 %{_datadir}/java/*.jar
 
 %files java-devel
-%defattr(-,root,root,-)
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Wed Feb 14 2018 Björn Esser <besser82@fedoraproject.org> - 4.8.30-25
+- Update spec file to match packaging guidelines (#1545192)
+
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 4.8.30-24
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
