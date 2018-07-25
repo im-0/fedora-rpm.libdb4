@@ -22,7 +22,9 @@ Patch22: db-4.5.20-jni-include-dir.patch
 Patch23: db-4.8.30-quotas-segfault.patch
 Patch24: db-4.8.30-format-security.patch
 Patch25: db-4.7.25-memp_stat-upstream-fix.patch
+Patch26: db-4.8.30-atomic_compare_exchange.patch
 
+BuildRequires: gcc gcc-c++
 BuildRequires: chrpath
 BuildRequires: ed
 BuildRequires: java-devel >= 1:1.6.0
@@ -163,6 +165,7 @@ popd
 %patch23 -p1 -b .quotas-segfault
 %patch24 -p1 -b .format-security
 %patch25 -p1 -b .memp_stat
+%patch26 -p1 -b .atomic_cmpx
 
 # Fix HREF references in the docs which would otherwise break when we split the docs up into subpackages.
 set +x
