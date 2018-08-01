@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 26%{?dist}
+Release: 28%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 
@@ -23,8 +23,9 @@ Patch23: db-4.8.30-quotas-segfault.patch
 Patch24: db-4.8.30-format-security.patch
 Patch25: db-4.7.25-memp_stat-upstream-fix.patch
 Patch26: db-4.8.30-atomic_compare_exchange.patch
-
 BuildRequires: gcc gcc-c++
+# downstream patch to hotfix rhbz#1464032
+Patch27: db-4.8.30-cwd-db_config.patch
 BuildRequires: chrpath
 BuildRequires: ed
 BuildRequires: java-devel >= 1:1.6.0
@@ -166,6 +167,7 @@ popd
 %patch24 -p1 -b .format-security
 %patch25 -p1 -b .memp_stat
 %patch26 -p1 -b .atomic_cmpx
+%patch27 -p2 -b .cwd-db_config
 
 # Fix HREF references in the docs which would otherwise break when we split the docs up into subpackages.
 set +x
@@ -379,6 +381,10 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Thu Jul 19 2018 Matej Mužila <mmuzila@redhat.com> - 4.8.30-28
+- Do not access DB_CONFIG when db_home is not set
+- Resolves: #1464035 (CVE-2017-10140)
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 4.8.30-26
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
