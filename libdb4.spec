@@ -305,21 +305,10 @@ popd
 # remove RPATHs
 chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
-
-%post -p /sbin/ldconfig cxx
-
-%postun -p /sbin/ldconfig cxx
-
-%post -p /sbin/ldconfig tcl
-
-%postun -p /sbin/ldconfig tcl
-
-%post -p /sbin/ldconfig java
-
-%postun -p /sbin/ldconfig java
+%ldconfig_scriptlets
+%ldconfig_scriptlets cxx
+%ldconfig_scriptlets tcl
+%ldconfig_scriptlets java
 
 %files
 %license LICENSE
