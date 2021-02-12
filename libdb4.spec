@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 31%{?dist}
+Release: 31.im0%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 
@@ -28,7 +28,6 @@ BuildRequires: gcc gcc-c++
 Patch27: db-4.8.30-cwd-db_config.patch
 BuildRequires: chrpath
 BuildRequires: ed
-BuildRequires: java-devel >= 1:1.6.0
 BuildRequires: libtool
 BuildRequires: perl-interpreter
 BuildRequires: perl-Carp
@@ -128,26 +127,6 @@ Provides: db4-tcl-devel = %{version}
 This package contains the libraries for building programs which use the
 Berkeley DB in Tcl.
 
-%package java
-Summary: Development files for using the Berkeley DB (version 4) with Java
-Requires: %{name}%{?_isa} = %{version}-%{release}
-Obsoletes: db4-java < 5.0.0
-Provides: db4-java = %{version}
-
-%description java
-This package contains the libraries for building programs which use the
-Berkeley DB in Java.
-
-%package java-devel
-Summary: Development files for using the Berkeley DB (version 4) with Java
-Requires: %{name}-java%{?_isa} = %{version}-%{release}
-Obsoletes: db4-java-devel < 5.0.0
-Provides: db4-java-devel = %{version}
-
-%description java-devel
-This package contains the libraries for building programs which use the
-Berkeley DB in Java.
-
 %prep
 %setup -q -n db-%{version} -a 1
 
@@ -223,7 +202,7 @@ ln -sf ../configure .
 	--enable-shared --enable-static \
 	--enable-tcl --with-tcl=%{_libdir} \
 	--enable-cxx \
-	--enable-java \
+	--disable-java \
 	--enable-test \
 	--disable-rpath \
 	--with-tcl=%{_libdir}/tcl8.6
@@ -237,12 +216,6 @@ perl -pi -e 's/^postdep_objects=".*$/postdep_objects=""/' libtool
 perl -pi -e 's/-shared -nostdlib/-shared/' libtool
 
 make %{?_smp_mflags}
-
-# XXX hack around libtool not creating ./libs/libdb_java-X.Y.lai
-LDBJ=./.libs/libdb_java-%{__soversion}.la
-if test -f ${LDBJ} -a ! -f ${LDBJ}i; then
-	sed -e 's,^installed=no,installed=yes,' < ${LDBJ} > ${LDBJ}i
-fi
 
 popd
 
@@ -263,13 +236,6 @@ chmod +x ${RPM_BUILD_ROOT}%{_libdir}/*.so*
 mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/%{name}
 mv ${RPM_BUILD_ROOT}%{_includedir}/*.h ${RPM_BUILD_ROOT}%{_includedir}/%{name}
 
-# Move java jar file to the correct place
-# Rename java jar file to fix conflict with libdb (#800359)
-mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/java
-mv ${RPM_BUILD_ROOT}%{_libdir}/*.jar ${RPM_BUILD_ROOT}%{_datadir}/java
-pushd ${RPM_BUILD_ROOT}%{_datadir}/java
-mv db.jar db4.jar
-popd
 
 # Eliminate installed doco
 rm -rf ${RPM_BUILD_ROOT}%{_prefix}/docs
@@ -296,7 +262,7 @@ popd
 # with libdb-devel (#839508)
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/%{name}
 pushd ${RPM_BUILD_ROOT}%{_libdir}/%{name}
-for i in libdb libdb_cxx libdb_tcl libdb_java; do
+for i in libdb libdb_cxx libdb_tcl; do
   rm -f ${RPM_BUILD_ROOT}%{_libdir}/$i.so
   ln -s ../$i-%{__soversion}.so $i.so
 done
@@ -308,7 +274,6 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %ldconfig_scriptlets
 %ldconfig_scriptlets cxx
 %ldconfig_scriptlets tcl
-%ldconfig_scriptlets java
 
 %files
 %license LICENSE
@@ -324,13 +289,12 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 
 %files doc
 %doc docs/*
-%doc examples_c examples_cxx examples_java
+%doc examples_c examples_cxx
 
 %files devel-static
 %{_libdir}/libdb-%{__soversion}.a
 %{_libdir}/libdb_cxx-%{__soversion}.a
 %{_libdir}/libdb_tcl-%{__soversion}.a
-%{_libdir}/libdb_java-%{__soversion}.a
 
 %files utils
 %{_bindir}/db*_archive
@@ -361,15 +325,10 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %files tcl-devel
 %{_libdir}/%{name}/libdb_tcl.so
 
-%files java
-%{_libdir}/libdb_java-%{__soversion}*.so
-%{_libdir}/libdb_java-%{__soversion_major}*.so
-%{_datadir}/java/*.jar
-
-%files java-devel
-%{_libdir}/%{name}/libdb_java.so
-
 %changelog
+* Fri Feb 12 2021 Ivan Mironov <mironov.ivan@gmail.com> - 4.8.30-31.im0
+- Disable Java support
+
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 4.8.30-31
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
